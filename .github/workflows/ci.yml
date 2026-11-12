@@ -1,0 +1,54 @@
+name: DevSecOps V&V Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  verify-and-validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout du dépôt
+        uses: actions/checkout@v4
+
+      - name: Installation de Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Installation propre des dépendances
+        run: npm ci
+
+      # 1. Volet Sécurité (DevSecOps)
+      - name: Audit de sécurité des dépendances (npm audit)
+        run: npm run security:audit
+
+      # 2. Vérification compilation TypeScript & Build Vite
+      - name: Build TypeScript & Vite
+        run: npm run build
+
+      # 3. Tests TDD + Couverture de code (Équivalent JaCoCo)
+      - name: Tests Unitaires & Couverture V8
+        run: npm run test:coverage
+
+      # 4. Tests BDD (Cucumber Gherkin)
+      - name: Tests Comportementaux BDD (Cucumber)
+        run: npm run test:bdd
+
+      # 5. Tests de Mutation (Équivalent PIT)
+      - name: Tests de Mutation (Stryker)
+        run: npm run test:mutation
+
+      # 6. Sauvegarde des rapports (Couverture + Mutation)
+      - name: Archiver les rapports V&V
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rapports-vv-couverture-et-mutation
+          path: |
+            coverage/
+            reports/mutation/
