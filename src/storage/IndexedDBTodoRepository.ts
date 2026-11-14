@@ -72,7 +72,7 @@ export class IndexedDBTodoRepository implements TodoRepository {
     return this.runTransaction(STORE_TASKS, 'readonly', (store) => store.get(id));
   }
 
-  async getTasksByProject(projectId: string): Promise<Task[]> {
+  async getTasksByProjectId(projectId: string): Promise<Task[]> {
     const db = await this.dbPromise;
     return new Promise((resolve, reject) => {
       const tx = db.transaction(STORE_TASKS, 'readonly');
@@ -89,8 +89,8 @@ export class IndexedDBTodoRepository implements TodoRepository {
     await this.runTransaction(STORE_TASKS, 'readwrite', (store) => store.delete(id));
   }
 
-  async deleteTasksByProject(projectId: string): Promise<void> {
-    const tasks = await this.getTasksByProject(projectId);
+  async deleteTasksByProjectId(projectId: string): Promise<void> {
+    const tasks = await this.getTasksByProjectId(projectId);
     for (const task of tasks) {
       await this.deleteTask(task.id);
     }

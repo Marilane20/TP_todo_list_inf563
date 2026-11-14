@@ -17,7 +17,7 @@ const taskTitleInput = document.getElementById('task-title') as HTMLInputElement
 const taskListEl = document.getElementById('task-list') as HTMLUListElement;
 
 async function renderProjects(): Promise<void> {
-  const projects = await service.listProjects();
+  const projects = await service.getAllProjects();
   projectListEl.innerHTML = '';
 
   for (const project of projects) {
@@ -58,7 +58,7 @@ async function renderProjects(): Promise<void> {
 
 async function renderTasks(): Promise<void> {
   if (!selectedProjectId) return;
-  const tasks = await service.listTasksByProject(selectedProjectId);
+  const tasks = await service.getTasksByProject(selectedProjectId);
   taskListEl.innerHTML = '';
 
   for (const task of tasks) {
