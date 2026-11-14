@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout du dépôt
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Installation de Node.js 22
         uses: actions/setup-node@v4
@@ -23,7 +25,7 @@ jobs:
       - name: Installation propre des dépendances
         run: npm ci
 
-      # 1. Volet Sécurité (DevSecOps)
+      # 1. Volet Sécurité (DevSecOps - SCA)
       - name: Audit de sécurité des dépendances (npm audit)
         run: npm run security:audit
 
@@ -35,15 +37,21 @@ jobs:
       - name: Tests Unitaires & Couverture V8
         run: npm run test:coverage
 
-      # 4. Tests BDD (Cucumber Gherkin)
+      # 4. Analyse statique & Qualité (SonarQube Cloud - SAST)
+      - name: Analyse SonarQube Cloud
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      # 5. Tests BDD (Cucumber Gherkin)
       - name: Tests Comportementaux BDD (Cucumber)
         run: npm run test:bdd
 
-      # 5. Tests de Mutation (Équivalent PIT)
+      # 6. Tests de Mutation (Équivalent PIT)
       - name: Tests de Mutation (Stryker)
         run: npm run test:mutation
 
-      # 6. Sauvegarde des rapports (Couverture + Mutation)
+      # 7. Sauvegarde des rapports (Couverture + Mutation)
       - name: Archiver les rapports V&V
         if: always()
         uses: actions/upload-artifact@v4
