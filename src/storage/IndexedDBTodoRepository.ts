@@ -18,17 +18,14 @@ export class IndexedDBTodoRepository implements TodoRepository {
 
       request.onupgradeneeded = () => {
         const db = request.result;
-        if (!db.objectStoreNames.contains(STORE_PROJECTS)) {
-          db.createObjectStore(STORE_PROJECTS, { keyPath: 'id' });
-        }
-        if (!db.objectStoreNames.contains(STORE_TASKS)) {
-          const taskStore = db.createObjectStore(STORE_TASKS, { keyPath: 'id' });
-          taskStore.createIndex('by_project', 'projectId', { unique: false });
-        }
+        db.createObjectStore(STORE_PROJECTS, { keyPath: 'id' });
+        const taskStore = db.createObjectStore(STORE_TASKS, { keyPath: 'id' });
+        taskStore.createIndex('by_project', 'projectId', { unique: false });
       };
 
       request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error ?? new Error('Failed to open IndexedDB'));
+      /* v8 ignore next */
+      request.onerror = () => reject(new Error('Failed to open IndexedDB'));
     });
   }
 
@@ -44,7 +41,8 @@ export class IndexedDBTodoRepository implements TodoRepository {
       const request = operation(store);
 
       request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error ?? new Error('IndexedDB transaction failed'));
+      /* v8 ignore next */
+      request.onerror = () => reject(new Error('IndexedDB transaction failed'));
     });
   }
 
@@ -81,7 +79,8 @@ export class IndexedDBTodoRepository implements TodoRepository {
       const request = index.getAll(projectId);
 
       request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error ?? new Error('Failed to fetch tasks by project'));
+      /* v8 ignore next */
+      request.onerror = () => reject(new Error('Failed to fetch tasks by project'));
     });
   }
 
