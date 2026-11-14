@@ -3,49 +3,45 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Todo List Projets - INF563 V&V</title>
+  <title>Todo List - INF563 V&V</title>
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; background: #f8fafc; color: #0f172a; }
-    h1 { border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; }
-    .layout { display: grid; grid-template-columns: 280px 1fr; gap: 1.5rem; margin-top: 1.5rem; }
-    .card { background: white; padding: 1rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    body { font-family: system-ui, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; background: #f8fafc; color: #1e293b; }
+    h1 { text-align: center; color: #0f172a; }
+    .grid { display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; }
+    .card { background: white; padding: 1.25rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
     form { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
     input, select { padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 4px; flex: 1; }
-    button { padding: 0.5rem 0.8rem; border: none; border-radius: 4px; cursor: pointer; background: #2563eb; color: white; font-weight: 500; }
+    button { padding: 0.5rem 0.85rem; border: none; border-radius: 4px; background: #2563eb; color: white; cursor: pointer; }
     button.danger { background: #dc2626; }
-    button.secondary { background: #64748b; }
     ul { list-style: none; padding: 0; margin: 0; }
-    li { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem; border-bottom: 1px solid #f1f5f9; gap: 0.5rem; }
-    li.active { background: #eff6ff; font-weight: bold; border-left: 3px solid #2563eb; }
-    .project-name { cursor: pointer; flex: 1; }
-    .done { text-decoration: line-through; color: #94a3b8; }
+    li { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem; border-bottom: 1px solid #e2e8f0; gap: 0.5rem; }
+    li.active { background: #eff6ff; font-weight: bold; }
+    .project-item { cursor: pointer; flex: 1; }
   </style>
 </head>
 <body>
-  <h1>Gestionnaire de Projets & Tâches (IndexedDB)</h1>
-
-  <div class="layout">
-    <!-- Colonne Projets -->
-    <section class="card">
+  <h1>Gestion de Projets & Tâches (IndexedDB)</h1>
+  <div class="grid">
+    <div class="card">
       <h2>Projets</h2>
       <form id="project-form">
-        <input type="text" id="project-input" placeholder="Nouveau projet..." required />
-        <button type="submit">+</button>
+        <label for="project-name" style="display:none;">Nom du nouveau projet</label>
+        <input type="text" id="project-name" aria-label="Nom du nouveau projet" placeholder="Nouveau projet..." required />
+        <button type="submit">Créer</button>
       </form>
       <ul id="project-list"></ul>
-    </section>
+    </div>
 
-    <!-- Colonne Tâches du projet sélectionné -->
-    <section class="card">
+    <div class="card">
       <h2 id="current-project-title">Sélectionnez un projet</h2>
       <form id="task-form" style="display: none;">
-        <input type="text" id="task-input" placeholder="Nouvelle tâche..." required />
+        <label for="task-title" style="display:none;">Titre de la nouvelle tâche</label>
+        <input type="text" id="task-title" aria-label="Titre de la nouvelle tâche" placeholder="Nouvelle tâche..." required />
         <button type="submit">Ajouter</button>
       </form>
       <ul id="task-list"></ul>
-    </section>
+    </div>
   </div>
-
   <script type="module" src="/src/ui/main.ts"></script>
 </body>
 </html>

@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ main, master ]
 
+permissions:
+  contents: read
+
 jobs:
   verify-and-validate:
     runs-on: ubuntu-latest
@@ -22,12 +25,12 @@ jobs:
           node-version: 22
           cache: 'npm'
 
-      - name: Installation propre des dépendances
-        run: npm ci
+      - name: Installation propre des dépendances (Sécurisée)
+        run: npm ci --ignore-scripts
 
       # 1. Volet Sécurité (DevSecOps - SCA)
       - name: Audit de sécurité des dépendances (npm audit)
-        run: npm run security:audit
+        run: npm run security:audit --ignore-scripts
 
       # 2. Vérification compilation TypeScript & Build Vite
       - name: Build TypeScript & Vite
